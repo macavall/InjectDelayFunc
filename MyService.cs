@@ -6,16 +6,20 @@ using static System.Formats.Asn1.AsnWriter;
 public class MyService : IMyService
 {
     public IServiceCollection? _serviceCollection;
+    public IServiceCollection? _serviceColl;
     public IServiceProvider? _serviceProvider;
 
-    public MyService()
+    public MyService(IServiceCollection servColl)
     {
+        _serviceColl = servColl;
         this.CreateServiceCollection();
         // Use AddHttpClient here or in the MyService class
     }
 
     public void CreateServiceCollection()
     {
+        _serviceColl?.AddSingleton(new TestClass());
+
         _serviceCollection = new ServiceCollection();
 
         _serviceCollection.AddSingleton<IMyService2, MyService2>();
@@ -32,5 +36,13 @@ public class MyService : IMyService
         myService2?.MyServiceMethod2();
 
 
+    }
+
+    public class TestClass
+    {
+        public void TestMethod()
+        {
+            Console.WriteLine("TestMethod Executed!!!");
+        }
     }
 }
