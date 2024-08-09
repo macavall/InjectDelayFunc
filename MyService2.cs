@@ -10,7 +10,7 @@ namespace injectDelayFunc
     {
         public void MyServiceMethod2()
         {
-            Console.WriteLine("Doing Something");
+            Console.WriteLine("MyServiceMethod2 Executed!!!");
         }
     }
 }
