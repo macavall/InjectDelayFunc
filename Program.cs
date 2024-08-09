@@ -36,7 +36,7 @@ internal class Program
         var lazyService = host.Services.GetRequiredService<Lazy<IMyService>>();
         var myService = lazyService.Value; // This triggers the initialization
 
-        // Wait for the host to complete
+        // Wait for the host to complete 
         await runTask;
     }
 }
