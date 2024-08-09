@@ -1,6 +1,7 @@
 ﻿using injectDelayFunc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using static System.Formats.Asn1.AsnWriter;
 
 public class MyService : IMyService
 {
@@ -25,5 +26,11 @@ public class MyService : IMyService
     public void MyServiceMethod()
     {
         Console.WriteLine("MyServiceMethod Executed!!!");
+
+        var myService2 = _serviceProvider?.GetRequiredService<IMyService2>();
+
+        myService2?.MyServiceMethod2();
+
+
     }
 }
