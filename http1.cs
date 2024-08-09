@@ -9,9 +9,9 @@ namespace injectDelayFunc
     public class http1
     {
         private readonly ILogger<http1> _logger;
-        private readonly Lazy<IMyService> _myService;
+        private readonly IMyService _myService;
 
-        public http1(ILogger<http1> logger, Lazy<IMyService> myService)
+        public http1(ILogger<http1> logger, IMyService myService)
         {
             _logger = logger;
             _myService = myService;
@@ -22,7 +22,7 @@ namespace injectDelayFunc
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            _myService.Value.MyServiceMethod();
+            _myService.MyServiceMethod();
 
             return new OkObjectResult("Welcome to Azure Functions!");
         }
