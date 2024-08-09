@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "injectDelayFunc": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7126"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "DockerfileRunArguments": "--init",
+      "httpPort": 34727,
+      "useSSL": false
+    }
+  }
+}
