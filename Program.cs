@@ -1,6 +1,7 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading.Tasks;
 
 internal class Program
@@ -8,21 +9,34 @@ internal class Program
     private static async Task Main(string[] args)
     {
         var host = new HostBuilder()
-        .ConfigureFunctionsWebApplication()
-        .ConfigureServices(async services =>
-        {
-            services.AddApplicationInsightsTelemetryWorkerService();
-            services.ConfigureFunctionsApplicationInsights();
-
-            _ = Task.Run(async () =>
+            .ConfigureFunctionsWebApplication()
+            .ConfigureServices(services =>
             {
-                await Task.Delay(5 * 1000);
-                services.AddSingleton<IMyService, MyService>();
-            });
-        });
+                services.AddApplicationInsightsTelemetryWorkerService();
+                services.ConfigureFunctionsApplicationInsights();
 
-        var ihost = host.Build();
+                // Register a Lazy<IMyService> for delayed initialization
+                services.AddSingleton(provider =>
+                {
+                    return new Lazy<IMyService>(() =>
+                    {
+                        return new MyService();
+                    });
+                });
+            })
+            .Build();
 
-        ihost.Run();
+        // Run the host
+        var runTask = Task.Run(() => host.Run());
+
+        // Delay for 5 seconds
+        await Task.Delay(5000);
+
+        // Trigger the service initialization
+        var lazyService = host.Services.GetRequiredService<Lazy<IMyService>>();
+        var myService = lazyService.Value; // This triggers the initialization
+
+        // Wait for the host to complete
+        await runTask;
     }
 }

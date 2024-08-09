@@ -22,6 +22,11 @@ namespace injectDelayFunc
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+            if (!_myService.IsValueCreated)
+            {
+                _logger.LogWarning("IMyService is not yet initialized.");
+            }
+
             _myService.Value.MyServiceMethod();
 
             return new OkObjectResult("Welcome to Azure Functions!");
