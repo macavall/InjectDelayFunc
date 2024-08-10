@@ -17,10 +17,11 @@ internal class Program
                 services.ConfigureFunctionsApplicationInsights();
 
                 // Register MyService as Singleton
-                services.AddSingleton<IMyService, MyService>();
+                //services.AddSingleton<IMyService, MyService>();
+                services.AddSingleton<IMyService>(provider => new MyService(services));
 
                 // Register the custom hosted service that will add another service after a delay
-                services.AddHostedService<DelayedServiceRegistrar>();
+                //services.AddHostedService<DelayedServiceRegistrar>();
             })
             .Build();
 
@@ -28,50 +29,50 @@ internal class Program
     }
 }
 
-public class DelayedServiceRegistrar : IHostedService
-{
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IServiceCollection _serviceCollection;
+//public class DelayedServiceRegistrar : IHostedService
+//{
+//    private readonly IServiceProvider _serviceProvider;
+//    private readonly IServiceCollection _serviceCollection;
 
-    public DelayedServiceRegistrar(IServiceProvider serviceProvider, IServiceCollection serviceCollection)
-    {
-        _serviceProvider = serviceProvider;
-        _serviceCollection = serviceCollection;
-    }
+//    public DelayedServiceRegistrar(IServiceProvider serviceProvider, IServiceCollection serviceCollection)
+//    {
+//        _serviceProvider = serviceProvider;
+//        _serviceCollection = serviceCollection;
+//    }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
-    {
-        // Delay the injection by 5 seconds
-        await Task.Delay(5000, cancellationToken);
+//    public async Task StartAsync(CancellationToken cancellationToken)
+//    {
+//        // Delay the injection by 5 seconds
+//        await Task.Delay(5000, cancellationToken);
 
-        // Dynamically add another service to the service collection
-        _serviceCollection.AddSingleton<IOtherService, OtherService>();
+//        // Dynamically add another service to the service collection
+//        _serviceCollection.AddSingleton<IOtherService, OtherService>();
 
-        // Trigger the rebuild of the service provider
-        var serviceProvider = _serviceCollection.BuildServiceProvider();
+//        // Trigger the rebuild of the service provider
+//        var serviceProvider = _serviceCollection.BuildServiceProvider();
 
-        // Optionally resolve and initialize the newly added service
-        var otherService = serviceProvider.GetService<IOtherService>();
-        // Use otherService if needed
-    }
+//        // Optionally resolve and initialize the newly added service
+//        var otherService = serviceProvider.GetService<IOtherService>();
+//        // Use otherService if needed
+//    }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-}
+//    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+//}
 
-// Sample interface and implementation for the delayed service
-public interface IOtherService
-{
-    void OtherServiceMethod();
-}
+//// Sample interface and implementation for the delayed service
+//public interface IOtherService
+//{
+//    void OtherServiceMethod();
+//}
 
-public class OtherService : IOtherService
-{
-    public void OtherServiceMethod()
-    {
-        Console.WriteLine("OtherServiceMethod Executed!!!");
-        // Implementation of the other service method
-    }
-}
+//public class OtherService : IOtherService
+//{
+//    public void OtherServiceMethod()
+//    {
+//        Console.WriteLine("OtherServiceMethod Executed!!!");
+//        // Implementation of the other service method
+//    }
+//}
 
 // Sample interface and implementation for MyService
 //public interface IMyService
